@@ -1,5 +1,19 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:fluttermax_map_native_features/providers/great_places.dart';
+import 'package:fluttermax_map_native_features/screens/place_list_screen.dart';
+import 'package:provider/provider.dart';
+
+const themeSeedColors = [
+  Colors.purple,
+  Colors.blue,
+  Colors.lightBlue,
+  Colors.green,
+  Colors.yellow,
+  Colors.orange,
+  Colors.red
+];
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -7,12 +21,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Great Places',
-      theme: ThemeData(
-        colorSchemeSeed: Colors.indigo,
+    return ChangeNotifierProvider.value(
+      value: Places(),
+      child: MaterialApp(
+        title: 'Great Places',
+        theme: ThemeData(
+          colorSchemeSeed:
+              themeSeedColors[Random().nextInt(themeSeedColors.length)],
+        ),
+        debugShowCheckedModeBanner: false,
+        home: const PlaceListScreen(),
       ),
-      home: Container(),
     );
   }
 }
