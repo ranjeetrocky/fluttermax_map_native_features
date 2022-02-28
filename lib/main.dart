@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fluttermax_map_native_features/providers/great_places.dart';
+import 'package:fluttermax_map_native_features/screens/add_place_screen.dart';
 import 'package:fluttermax_map_native_features/screens/place_list_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         home: const PlaceListScreen(),
+        routes: {
+          AddPlaceScreen.routeName: (context) => const AddPlaceScreen(),
+        },
       ),
     );
   }
