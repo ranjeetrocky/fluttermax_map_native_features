@@ -1,6 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttermax_map_native_features/consts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as pathProvider;
 
 class ImageInput extends StatefulWidget {
   const ImageInput({Key? key}) : super(key: key);
@@ -11,6 +15,29 @@ class ImageInput extends StatefulWidget {
 
 class _ImageInputState extends State<ImageInput> {
   File? _storedImage;
+  Future<void> _takePicture() async {
+    try {
+      final imageFile = await ImagePicker()
+          .pickImage(source: ImageSource.camera, maxWidth: 600);
+      setState(() {
+        _storedImage = File(imageFile!.path);
+      });
+      final appDir = await pathProvider.getExternalStorageDirectory();
+      var fileName = path.basename(_storedImage!.path);
+      fileName = DateTime.now().toString() + "." + fileName.split(".").last;
+      // appDir?.forEach((element) {
+      //   return print(element.path);
+      // });
+      kprint('${appDir!.path}/$fileName');
+      // final savedFile = await _storedImage!.copy(
+      //     '/storage/emulated/0/Android/media/com.cheemsinfotech.fluttermax_map_native_features/$fileName');
+      final savedFile = await _storedImage!.copy('${appDir.path}/$fileName');
+      kprint('Saved in ${appDir.path}/$fileName');
+    } catch (e) {
+      kprint('Exception : ' + e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -19,10 +46,13 @@ class _ImageInputState extends State<ImageInput> {
           height: 100,
           width: 100,
           child: _storedImage != null
-              ? Image.file(
-                  _storedImage!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: Image.file(
+                    _storedImage!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
                 )
               : const Center(
                   child: Padding(
@@ -44,7 +74,7 @@ class _ImageInputState extends State<ImageInput> {
           child: TextButton.icon(
             label: const Text('Take Picture'),
             icon: const Icon(Icons.camera_alt_rounded),
-            onPressed: () {},
+            onPressed: _takePicture,
           ),
         )
       ],
