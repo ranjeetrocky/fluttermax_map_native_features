@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttermax_map_native_features/consts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as pathProvider;
@@ -28,13 +27,13 @@ class _ImageInputState extends State<ImageInput> {
       // appDir?.forEach((element) {
       //   return print(element.path);
       // });
-      kprint('${appDir!.path}/$fileName');
+      print('${appDir!.path}/$fileName');
       // final savedFile = await _storedImage!.copy(
       //     '/storage/emulated/0/Android/media/com.cheemsinfotech.fluttermax_map_native_features/$fileName');
       final savedFile = await _storedImage!.copy('${appDir.path}/$fileName');
-      kprint('Saved in ${appDir.path}/$fileName');
+      print('Saved in ${savedFile.path}');
     } catch (e) {
-      kprint('Exception : ' + e.toString());
+      print('Exception : ' + e.toString());
     }
   }
 
