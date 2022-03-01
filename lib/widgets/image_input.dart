@@ -6,7 +6,8 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as pathProvider;
 
 class ImageInput extends StatefulWidget {
-  const ImageInput({Key? key}) : super(key: key);
+  final Function onSelectImage;
+  const ImageInput({Key? key, required this.onSelectImage}) : super(key: key);
 
   @override
   _ImageInputState createState() => _ImageInputState();
@@ -32,6 +33,7 @@ class _ImageInputState extends State<ImageInput> {
       //     '/storage/emulated/0/Android/media/com.cheemsinfotech.fluttermax_map_native_features/$fileName');
       final savedFile = await _storedImage!.copy('${appDir.path}/$fileName');
       print('Saved in ${savedFile.path}');
+      widget.onSelectImage(savedFile);
     } catch (e) {
       print('Exception : ' + e.toString());
     }
