@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttermax_map_native_features/helpers/location_helper.dart';
+import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({Key? key}) : super(key: key);
@@ -8,6 +10,21 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
+  Future<void> _getCurrentLocation() async {
+    final location = await Location().getLocation();
+    print(
+        "Lattitude : ${location.latitude}\nLongitude : ${location.longitude}");
+
+    final previewUrl = LocationHelper.generateLocationPreviewImage(
+      latitude: location.latitude!,
+      longitude: location.longitude!,
+    );
+    setState(() {
+      _previewImgUrl = previewUrl;
+      print('Reloading Location Image');
+    });
+  }
+
   String? _previewImgUrl;
   @override
   Widget build(BuildContext context) {
@@ -24,6 +41,20 @@ class _LocationInputState extends State<LocationInput> {
               : Image.network(
                   _previewImgUrl!,
                   fit: BoxFit.cover,
+                  loadingBuilder: (context, child, imageChunkEvent) {
+                    return imageChunkEvent == null
+                        ? child
+                        : Center(
+                            child: CircularProgressIndicator.adaptive(
+                              strokeWidth: 1,
+                              semanticsLabel: "Loading",
+                              value: imageChunkEvent.expectedTotalBytes == null
+                                  ? null
+                                  : imageChunkEvent.cumulativeBytesLoaded /
+                                      imageChunkEvent.expectedTotalBytes!,
+                            ),
+                          );
+                  },
                 ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
@@ -34,7 +65,7 @@ class _LocationInputState extends State<LocationInput> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton.icon(
-                onPressed: () {},
+                onPressed: _getCurrentLocation,
                 icon: const Icon(Icons.location_on),
                 label: const Text('Current Location')),
             TextButton.icon(
