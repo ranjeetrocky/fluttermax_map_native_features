@@ -68,8 +68,9 @@ class _ImageInputState extends State<ImageInput> {
                 ),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              border: Border.all(width: 1),
-              borderRadius: BorderRadius.circular(15)),
+            borderRadius: BorderRadius.circular(15),
+            color: Theme.of(context).colorScheme.primaryContainer,
+          ),
         ),
         const SizedBox(
           width: 16,
