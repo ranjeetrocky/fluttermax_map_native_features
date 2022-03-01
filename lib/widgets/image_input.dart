@@ -19,8 +19,11 @@ class _ImageInputState extends State<ImageInput> {
     try {
       final imageFile = await ImagePicker()
           .pickImage(source: ImageSource.camera, maxWidth: 600);
+      if (imageFile == null) {
+        return;
+      }
       setState(() {
-        _storedImage = File(imageFile!.path);
+        _storedImage = File(imageFile.path);
       });
       final appDir = await pathProvider.getExternalStorageDirectory();
       var fileName = path.basename(_storedImage!.path);
