@@ -19,28 +19,38 @@ class PlaceListScreen extends StatelessWidget {
               icon: const Icon(Icons.add))
         ],
       ),
-      body: Consumer<Places>(
-        builder: (context, places, child) {
-          return places.items.isEmpty
-              ? child!
-              : ListView.builder(
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: FileImage(places.items[index].image),
-                      ),
-                      title: Text(places.items[index].title),
-                      onTap: () {
-                        //TODO: got to details page
-                      },
-                    );
+      body: FutureBuilder(
+        future: Provider.of<Places>(context, listen: false).fetchAndSetPlaces(),
+        builder: (context, snapshot) {
+          return snapshot.connectionState == ConnectionState.waiting
+              ? const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                )
+              : Consumer<Places>(
+                  builder: (context, places, child) {
+                    return places.items.isEmpty
+                        ? child!
+                        : ListView.builder(
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      FileImage(places.items[index].image),
+                                ),
+                                title: Text(places.items[index].title),
+                                onTap: () {
+                                  //TODO: got to details page
+                                },
+                              );
+                            },
+                            itemCount: places.items.length,
+                          );
                   },
-                  itemCount: places.items.length,
+                  child: const Center(
+                    child: Text('Got no places yet, add some!'),
+                  ),
                 );
         },
-        child: const Center(
-          child: Text('Got no places yet, add some!'),
-        ),
       ),
     );
   }
