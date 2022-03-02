@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttermax_map_native_features/providers/great_places.dart';
 import 'package:fluttermax_map_native_features/screens/add_place_screen.dart';
+import 'package:fluttermax_map_native_features/screens/place_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 class PlaceListScreen extends StatelessWidget {
@@ -41,7 +42,9 @@ class PlaceListScreen extends StatelessWidget {
                                 subtitle:
                                     Text(places.items[index].location.address),
                                 onTap: () {
-                                  //TODO: got to details page
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => PlaceDetailScreen(
+                                          place: places.items[index])));
                                 },
                               );
                             },

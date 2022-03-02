@@ -24,6 +24,8 @@ class LocationHelper {
     final response = await get(Uri.parse(url));
     final result = jsonDecode(response.body);
     print(result);
-    return result['results'][0]['formatted_address'];
+    final address = result['results'][0]['formatted_address'];
+    print(address);
+    return address;
   }
 }

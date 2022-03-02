@@ -4,12 +4,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapScreen extends StatefulWidget {
   final PlaceLocation initialLocation;
+  final MapType mapType;
   final bool isSelecting;
   const MapScreen({
     Key? key,
     this.initialLocation = const PlaceLocation(
         lattitude: 28.6926341, longitude: 76.9512634, address: 'Delhi'),
     this.isSelecting = false,
+    this.mapType = MapType.normal,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,9 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Location'),
+        title: Text(widget.isSelecting
+            ? 'Select Location'
+            : widget.initialLocation.address),
         actions: [
           if (widget.isSelecting)
             IconButton(
@@ -42,7 +46,7 @@ class _MapScreenState extends State<MapScreen> {
         ],
       ),
       body: GoogleMap(
-        mapType: MapType.normal,
+        mapType: widget.mapType,
         buildingsEnabled: true,
         myLocationEnabled: true,
         initialCameraPosition: CameraPosition(
@@ -53,11 +57,17 @@ class _MapScreenState extends State<MapScreen> {
           zoom: 17,
         ),
         onTap: widget.isSelecting ? _selectPlace : null,
-        markers: _pickedPosition == null
+        markers: (_pickedPosition == null && widget.isSelecting)
             ? {}
             : {
                 Marker(
-                    markerId: const MarkerId('m1'), position: _pickedPosition!)
+                  markerId: const MarkerId('m1'),
+                  position: _pickedPosition ??
+                      LatLng(
+                        widget.initialLocation.lattitude,
+                        widget.initialLocation.longitude,
+                      ),
+                ),
               },
       ),
     );
