@@ -1,4 +1,4 @@
-const GOOGLE_API_KEY = 'AIzaSyBTNMsKa_LKWQs8wYcxXF5a0RgGsaGC0eA';
+const GOOGLE_API_KEY = 'AIzaSyAQKcSHxr9TTfZYrKBDsaKbcQTi4CBOmb4';
 
 enum MapType {
   sattelite,
