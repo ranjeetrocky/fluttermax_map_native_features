@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttermax_map_native_features/models/place.dart';
 import 'package:fluttermax_map_native_features/providers/great_places.dart';
 import 'package:fluttermax_map_native_features/widgets/image_input.dart';
 import 'package:fluttermax_map_native_features/widgets/location_input.dart';
@@ -17,17 +18,25 @@ class AddPlaceScreen extends StatefulWidget {
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
   final _titleController = TextEditingController();
   File? _pickedImage;
+  PlaceLocation? _pickedLocation;
+
+  void _selectPlace({required double lat, required double lng}) {
+    _pickedLocation =
+        PlaceLocation(lattitude: lat, longitude: lng, address: '');
+  }
 
   void _selectImage(File pickedImage) {
     _pickedImage = pickedImage;
   }
 
   void _savePlace() {
-    if (_titleController.text.isEmpty || _pickedImage == null) {
+    if (_titleController.text.isEmpty ||
+        _pickedImage == null ||
+        _pickedLocation == null) {
       return;
     }
     Provider.of<Places>(context, listen: false)
-        .addPlace(_titleController.text, _pickedImage!);
+        .addPlace(_titleController.text, _pickedImage!, _pickedLocation!);
     Navigator.of(context).pop({'message': 'from Add Place Screen'});
   }
 
@@ -58,7 +67,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        const LocationInput(),
+                        LocationInput(selectLocation: _selectPlace),
                       ],
                     )))),
         ElevatedButton.icon(

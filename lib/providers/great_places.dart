@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:fluttermax_map_native_features/helpers/db_helper.dart';
+import 'package:fluttermax_map_native_features/helpers/location_helper.dart';
 
 import '../models/place.dart';
 
@@ -11,12 +12,18 @@ class Places with ChangeNotifier {
     return [..._items];
   }
 
-  void addPlace(String title, File image) {
+  Future<void> addPlace(
+      String title, File image, PlaceLocation placeLocation) async {
+    final address = await LocationHelper.getPlaceAddress(
+        placeLocation.lattitude, placeLocation.longitude);
+    final locationWithAddress = PlaceLocation(
+        lattitude: placeLocation.lattitude,
+        longitude: placeLocation.longitude,
+        address: address);
     final newPlace = Place(
         id: DateTime.now().toString(),
         title: title,
-        location:
-            PlaceLocation(lattitude: 22.0, longitude: 22.00, address: 'surat'),
+        location: locationWithAddress,
         image: image);
     _items.add(newPlace);
     DBHelper.insert(
@@ -24,7 +31,10 @@ class Places with ChangeNotifier {
       {
         'id': newPlace.id,
         'title': newPlace.title,
-        'image': newPlace.image.path
+        'image': newPlace.image.path,
+        'loc_lat': newPlace.location.lattitude,
+        'loc_lng': newPlace.location.longitude,
+        'address': newPlace.location.address,
       },
     );
     notifyListeners();
@@ -36,7 +46,10 @@ class Places with ChangeNotifier {
         .map((e) => Place(
             id: e['id'] as String,
             title: e['title'] as String,
-            location: null,
+            location: PlaceLocation(
+                lattitude: e['loc_lat'] as double,
+                longitude: e['loc_lng'] as double,
+                address: e['address'] as String),
             image: File(e['image'] as String)))
         .toList();
     print('fetched ' + _items.length.toString() + ' places');
